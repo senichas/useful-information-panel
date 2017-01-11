@@ -1,0 +1,2 @@
+rootProject.name = 'useful-information-panel'
+include 'panel'
