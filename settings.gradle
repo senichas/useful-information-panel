@@ -1,2 +1,2 @@
-rootProject.name = 'useful-information-panel'
-include 'panel'
+rootProject.name = 'uip'
+include 'panel-web'
