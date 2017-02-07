@@ -10,44 +10,52 @@
             charset="utf-8"></script>
 
     <script type="text/javascript">
-        var myMap;
+        var map;
+        var router;
         $(document).ready(function () {
-            var map = new YMaps.Map(YMaps.jQuery("#YMapsID")[0]);
+            map = new YMaps.Map(YMaps.jQuery("#YMapsID")[0]);
             map.setCenter(new YMaps.GeoPoint(30.523541, 50.446472), 12);
             var traffic = new YMaps.Traffic.Control({showInfoSwitcher: true}, {infoLayerShown: true});
             map.addControl(traffic, new YMaps.ControlPosition(YMaps.ControlPosition.BOTTOM_LEFT,
                 new YMaps.Point(5, 5)));
             traffic.show();
 
-           /* var routerModel = new YMaps.RouterEditor.RouterModel();
-            var editor = new YMaps.RouterEditor.DragAndDropEditor(routerModel, {
-                    viaPointHintContent: 'Перетащите точку или удалите ёё двойным щелчком',
-                    cursorHintContent: 'Перетащите метку, чтобы создать промежуточную точку',
-                    maxPoints: 3
-                }
-            );
-            routerModel.getRouteProvider().route({
-                    wayPoints: [new YMaps.GeoPoint(30.468141, 50.452357),
-                        new YMaps.GeoPoint(30.488807, 50.452184),
-                        new YMaps.GeoPoint(30.507640, 50.431825)
-                    ],
-                    viaPoints: [1],
-                    options: {
-                        boundedBy: map.getBounds(),
-                        viewAutoApply: true
-                    } // область для геокодирования
-                },
-                function (rr) {
-                    // Передача полученного результат в модель.
-                    // Модель оповестит о новом маршруте редактор.
-                    routerModel.setRouterResult(rr);
-                }
-            )
-            ;*/
+            $("#overviewButton").click(hideCommuteRoute);
+            $("#commuteRoutButton").click(commuteRoutButtonClickHandler);
+            showCommuteRoute();
+            /* var routerModel = new YMaps.RouterEditor.RouterModel();
+             var editor = new YMaps.RouterEditor.DragAndDropEditor(routerModel, {
+             viaPointHintContent: 'Перетащите точку или удалите ёё двойным щелчком',
+             cursorHintContent: 'Перетащите метку, чтобы создать промежуточную точку',
+             maxPoints: 3
+             }
+             );
+             routerModel.getRouteProvider().route({
+             wayPoints: [new YMaps.GeoPoint(30.468141, 50.452357),
+             new YMaps.GeoPoint(30.488807, 50.452184),
+             new YMaps.GeoPoint(30.507640, 50.431825)
+             ],
+             viaPoints: [1],
+             options: {
+             boundedBy: map.getBounds(),
+             viewAutoApply: true
+             } // область для геокодирования
+             },
+             function (rr) {
+             // Передача полученного результат в модель.
+             // Модель оповестит о новом маршруте редактор.
+             routerModel.setRouterResult(rr);
+             }
+             )
+             ;*/
 // Размещение редактора на карте.
 //            map.addControl(editor);
 
-            var router = new YMaps.Router([
+
+        });
+
+        var showCommuteRoute = function () {
+            router = new YMaps.Router([
                     new YMaps.GeoPoint(30.468141, 50.452357),
                     new YMaps.GeoPoint(30.488807, 50.452184),
                     new YMaps.GeoPoint(30.507640, 50.431825)],
@@ -61,7 +69,20 @@
                 router.getWayPoint(0).setIconContent('Точка отправления');
                 router.getWayPoint(1).setIconContent('Точка прибытия');
             });
-        });
+        }
+
+        var hideCommuteRoute = function () {
+            if (router != null) {
+                map.removeOverlay(router);
+                router = null;
+            }
+        }
+
+        var commuteRoutButtonClickHandler = function () {
+            if (router == null) {
+                showCommuteRoute();
+            }
+        }
     </script>
     <style>
         html, body {
@@ -70,16 +91,23 @@
             width: 100%;
             height: 100%;
         }
+
+        .navigate-button {
+            width: 100%;
+            padding: 20px 0;
+            background-color: aqua;
+            border: none;
+        }
     </style>
 </head>
 <body>
 <table>
     <tr>
         <td>
-            <button>Commute</button>
+            <button id="commuteRoutButton" class="navigate-button">Commute</button>
         </td>
         <td>
-            <button>Overview</button>
+            <button id="overviewButton" class="navigate-button">Overview</button>
         </td>
     </tr>
     <tr>
